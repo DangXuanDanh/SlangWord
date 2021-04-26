@@ -8,6 +8,7 @@ package pkg20424095_slangdictionary;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 /**
@@ -26,7 +27,7 @@ public class Main {
     public static void main(String[] args) throws IOException{
         // TODO code application logic here
         SlangWord();
-        SearchSlangWord();
+        SearchDefinition();
         /*DataInputStream dis;
         Scanner sc = new Scanner(System.in);
         int luachon = 1;
@@ -97,10 +98,14 @@ public class Main {
     }
     
     public static void SearchDefinition() throws IOException{
-        System.out.print("Nhập Slang Word cần tìm:");
-        String slangword = sc.nextLine();
-        
-        System.out.println("definition : "+slangdictionary.get(slangword));
+        System.out.print("Nhập definition cần tìm:");
+        String definition = sc.nextLine();
+        for(Entry<String, String> entry: slangdictionary.entrySet()) {
+            //System.out.println(entry.getValue());
+            if(entry.getValue().contains(definition)) {
+                System.out.println("Slang Word : "+entry.getKey());
+        }
+    }
         
     }
 }
