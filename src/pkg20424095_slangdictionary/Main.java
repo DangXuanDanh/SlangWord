@@ -27,7 +27,8 @@ public class Main {
     public static void main(String[] args) throws IOException{
         // TODO code application logic here
         SlangWord();
-        SearchDefinition();
+        //SearchDefinition();
+        AddSlangWord();
         /*DataInputStream dis;
         Scanner sc = new Scanner(System.in);
         int luachon = 1;
@@ -108,4 +109,33 @@ public class Main {
     }
         
     }
+    
+    public static void AddSlangWord()throws IOException  {
+        BufferedReader br = new BufferedReader( new InputStreamReader(System.in, "utf8"));
+        BufferedWriter bw = new BufferedWriter( new FileWriter(filePath,true));
+        PrintWriter pw = new PrintWriter(bw);
+        DataOutputStream dos;
+        
+	try 
+	{   
+            System.out.println("---------Add Slang Word-----");
+            System.out.print("Slang Word:");
+            String SlangWord = br.readLine();
+            
+            System.out.print("Definition:");
+            String Definition = br.readLine();
+        
+            pw.println(SlangWord+"`"+Definition);
+            pw.flush();
+            pw.close();
+	}
+	catch(IOException exc) 
+	{
+		System.out.println("Error reading file.");
+	}
+		
+		//dos.close();
+                System.out.println("Finished ! Check your file !");
+    }
+    
 }
