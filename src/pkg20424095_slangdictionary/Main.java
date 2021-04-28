@@ -30,8 +30,8 @@ public class Main {
         //SlangWord();
         //SearchDefinition();
         //AddSlangWord();
-        DeleteSlangWord();
-        
+        //DeleteSlangWord();
+        EditSlangWord();
         /*DataInputStream dis;
         Scanner sc = new Scanner(System.in);
         int luachon = 1;
@@ -216,5 +216,75 @@ public class Main {
         }
     }
     
-    
+    public static void EditSlangWord()throws IOException  
+	{
+            File oldFile = new File(filePath);
+            File newFile = new File("temp.txt");
+            boolean found = false;
+            String Definition="";String SlangWord = "";
+            int count=0;
+            
+            String editTemp = "";
+            String currentLine;
+            String data[];
+         try{
+            System.out.println("---------Edit Slang Word-----");
+            FileWriter fw = new FileWriter("temp.txt",true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+            
+            FileReader fr = new FileReader(filePath);
+            BufferedReader br = new BufferedReader(fr);
+            
+            System.out.print("Nhap Slangword muon sua: ");
+            editTemp =sc.nextLine();
+            
+            
+            //dos.writeUTF(hoten);
+        
+            
+            //x = new Scanner (new File(filePath));
+            //x.useDelimiter("[`\n]");
+            while ((currentLine = br.readLine())!= null) {
+                /*SlangWord=x.next();
+                Definition = x.next();*/
+                data = currentLine.split("`");
+                if((data[0].equalsIgnoreCase(editTemp)))
+                {
+                    System.out.print("Nhap Slangword:");
+                    String newSlangWord = sc.nextLine();
+            
+                    System.out.print("Nhap Definition:");
+                    String newDefinition = sc.nextLine();
+                    
+                    pw.println(newSlangWord+"`"+newDefinition);
+                    count = 1;
+                }
+                else{
+                    pw.println(currentLine);
+                }
+            }
+            
+            
+            sc.close();
+            pw.flush();
+            pw.close();
+            fr.close();
+            br.close();
+            bw.close();
+            fw.close();
+            
+            oldFile.delete();
+            File dump = new File(filePath);
+            newFile.renameTo(dump);
+        }catch(Exception e){
+            System.out.println("");
+        }
+        if(count == 0){
+            System.out.println("Khong tim thay Slangword " + editTemp);
+        }
+        else{
+            System.out.println("Finished ! Check your file !");
+        }
+    }
 }
