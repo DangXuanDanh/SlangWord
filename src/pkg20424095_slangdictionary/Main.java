@@ -31,7 +31,8 @@ public class Main {
         //SearchDefinition();
         //AddSlangWord();
         //DeleteSlangWord();
-        EditSlangWord();
+        //EditSlangWord();
+        RandomSlangWord();
         /*DataInputStream dis;
         Scanner sc = new Scanner(System.in);
         int luachon = 1;
@@ -286,5 +287,20 @@ public class Main {
         else{
             System.out.println("Finished ! Check your file !");
         }
+    }
+    
+    public static void RandomSlangWord()throws IOException {
+        System.out.println("-------------Random Slang Word---------------");
+        String data[];
+        File file = new File(filePath); 
+        final RandomAccessFile f = new RandomAccessFile(file, "r");
+        final long randomLocation = (long) (Math.random() * f.length());
+        f.seek(randomLocation);
+        f.readLine();
+        String randomLine = f.readLine();
+        f.close();
+        
+        data = randomLine.split("`");
+        System.out.println("Slang word: " + data[0] + ", Definition: " + data[1]);
     }
 }
