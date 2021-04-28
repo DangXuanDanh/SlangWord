@@ -20,15 +20,18 @@ public class Main {
     final static String filePath
         = "slang.txt";
     static HashMap<String, String> slangdictionary = new HashMap<String, String>();
+    private static Scanner x;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException{
         // TODO code application logic here
-        SlangWord();
+        //SlangWord();
         //SearchDefinition();
-        AddSlangWord();
+        //AddSlangWord();
+        DeleteSlangWord();
+        
         /*DataInputStream dis;
         Scanner sc = new Scanner(System.in);
         int luachon = 1;
@@ -137,5 +140,81 @@ public class Main {
 		//dos.close();
                 System.out.println("Finished ! Check your file !");
     }
+    
+    
+    public static void DeleteSlangWord()throws IOException  
+	{
+            File oldFile = new File(filePath);
+            File newFile = new File("temp.txt");
+            boolean found = false;
+            String Definition="";String SlangWord = "";
+            String Confirm = "";
+            String removeTemp = "";
+                    
+            int count=0;
+            String currentLine;
+            String data[];
+         
+         try{
+            System.out.println("---------Delete Slang Word-----");
+            FileWriter fw = new FileWriter("temp.txt",true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+            
+            FileReader fr = new FileReader(filePath);
+            BufferedReader br = new BufferedReader(fr);
+            
+            System.out.print("Nhap SlangWord muon xoa: ");
+            removeTemp =sc.nextLine();
+            while(Confirm != "y"){
+                System.out.print("Bạn có muốn xóa Slang Word(" + removeTemp +")không(y/n):");
+                Confirm = sc.nextLine();
+                if(Confirm.equals("y")){
+                //sc = new Scanner (new File(filePath));
+                //sc.useDelimiter("[`\n]");
+                while ((currentLine = br.readLine())!= null) {
+                    /*SlangWord=sc.next();
+                    Definition = sc.next();
+                    if(!SlangWord.equals(removeTemp))
+                    {
+                        pw.println(SlangWord+"`"+Definition);
+                    }*/
+                    
+                    data = currentLine.split("`");
+                    if(!(data[0].equalsIgnoreCase(removeTemp))){
+                        pw.println(currentLine);
+                    }
+                    
+                    else{
+                        count = 1;
+                    }
+                }
+                sc.close();
+                pw.flush();
+                pw.close();
+                fr.close();
+                br.close();
+                bw.close();
+                fw.close();
+                oldFile.delete();
+                File dump = new File(filePath);
+                newFile.renameTo(dump);
+                break;
+                }
+                else if(Confirm.equals("n")){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            System.out.println("");
+        }
+        if(Confirm.equals("y") && count == 1){
+            System.out.println("Finished ! Check your file !");
+        }
+        else if(count == 0){
+            System.out.println("Khong tim thay Slangword " + removeTemp);
+        }
+    }
+    
     
 }
