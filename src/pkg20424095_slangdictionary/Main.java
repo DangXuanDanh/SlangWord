@@ -53,6 +53,7 @@ public class Main {
             ShowHistory();
             continue;
         case 4:
+            SlangWord();
             AddSlangWord();
             continue;
         case 5:
@@ -112,9 +113,10 @@ public class Main {
         
         System.out.print("Nhập Slang Word cần tìm:");
         String slangword = sc.nextLine();
+        String slangworduc = slangword.toUpperCase();
         
-        System.out.println("definition : "+slangdictionary.get(slangword));
-        pw.println(slangword+"`"+slangdictionary.get(slangword));
+        System.out.println("definition : "+slangdictionary.get(slangworduc));
+        pw.println(slangworduc+"`"+slangdictionary.get(slangworduc));
         pw.flush();
         pw.close();
     }
@@ -127,9 +129,11 @@ public class Main {
         
         System.out.print("Nhập definition cần tìm:");
         String definition = sc.nextLine();
+        String definitionuc = definition.substring(0,1).toUpperCase() + definition.substring(1).toLowerCase();
+        String definitionlc = definition.toLowerCase();
         for(Entry<String, String> entry: slangdictionary.entrySet()) {
             //System.out.println(entry.getValue());
-            if(entry.getValue().contains(definition)) {
+            if(entry.getValue().contains(definition) || entry.getValue().contains(definitionuc) || entry.getValue().contains(definitionlc)) {
                 System.out.println("Slang Word : "+entry.getKey()+", Definition: "+ slangdictionary.get(entry.getKey()));
                 pw.println(entry.getKey()+"`"+slangdictionary.get(entry.getKey()));
             }   
@@ -184,6 +188,7 @@ public class Main {
         BufferedWriter bw = new BufferedWriter( new FileWriter(filePath,true));
         PrintWriter pw = new PrintWriter(bw);
         DataOutputStream dos;
+        Boolean temp = false;
         
 	try 
 	{   
@@ -191,10 +196,42 @@ public class Main {
             System.out.print("Slang Word:");
             String SlangWord = br.readLine();
             
-            System.out.print("Definition:");
-            String Definition = br.readLine();
-        
-            pw.println(SlangWord+"`"+Definition);
+            Boolean add = false;
+                int i = 0;
+		String def = "";
+                String Definition="";
+
+		for (Entry<String, String> entry : slangdictionary.entrySet()) {
+			if (entry.getKey().equalsIgnoreCase(SlangWord)) {
+				System.out.println("Slang word đã tồn tại!!!");
+                                System.out.println("1: Overwrite | 2: Add new ");
+				System.out.print("Lựa chọn:");
+				int selection = sc.nextInt();
+				if (selection == 1) {
+					System.out.print("Nhập definition: ");
+					Definition = br.readLine();
+					entry.setValue(Definition);
+					add = true;
+				} else if (selection == 2) {
+					System.out.print("Nhập definition: ");
+					Definition = br.readLine();
+					def = Definition;
+					add = true;
+                                        i++;
+				}
+			}
+		}
+            if (def.length() > 0) {
+                    System.out.print(Definition);
+                    pw.println(SlangWord + String.valueOf(i) +"`"+Definition);
+		}
+            
+            if (!add) {
+			System.out.print("Nhập definition: ");
+			Definition = br.readLine();
+			pw.println(SlangWord+"`"+Definition);
+			
+		}
             pw.flush();
             pw.close();
 	}
@@ -232,6 +269,7 @@ public class Main {
             
             System.out.print("Nhập SlangWord muốn xóa: ");
             removeTemp =sc.nextLine();
+            String removeTempuc = removeTemp.toUpperCase();
             while(Confirm != "y"){
                 System.out.print("Bạn có muốn xóa Slang Word(" + removeTemp +")không(y/n):");
                 Confirm = sc.nextLine();
@@ -408,6 +446,131 @@ public class Main {
         System.out.println("Slang word: " + data[0] + ", Definition: " + data[1]);
     }
     
-    
+    public static void SlangWordQuizz() {
+		Random generator = new Random();
+                String Confirm = "y";
+                while(Confirm.equals("y") || Confirm.equals("Y")){
+		int value = generator.nextInt(slangdictionary.size()) + 1;
+
+		Object firstKey = slangdictionary.keySet().toArray()[value];
+		Object valueForFirstKey = slangdictionary.get(firstKey);
+
+		String ans = valueForFirstKey.toString();
+
+		List<String> definitions = new ArrayList<>();
+		definitions.add(ans);
+
+		System.out.println("-------------------");
+		System.out.println("slang word: " + firstKey);
+		System.out.println("Choose the right definition");
+
+		for (int i = 0; i < 3; i++) {
+
+			value = generator.nextInt(slangdictionary.size()) + 1;
+			Object firstKey2 = slangdictionary.keySet().toArray()[value];
+			Object valueForFirstKey2 = slangdictionary.get(firstKey2);
+
+			definitions.add(valueForFirstKey2.toString());
+		}
+
+		Collections.shuffle(definitions);
+
+		HashMap<String, String> quizz = new HashMap<String, String>();
+		quizz.put("A", definitions.get(0));
+		quizz.put("B", definitions.get(1));
+		quizz.put("C", definitions.get(2));
+		quizz.put("D", definitions.get(3));
+
+		for (Entry<String, String> entry : quizz.entrySet()) {
+			System.out.println(entry.getKey() + ". " + entry.getValue());
+		}
+
+		System.out.print("Input answer: ");
+		String q = sc.next();
+		String qU = q.toUpperCase();
+
+		if (quizz.containsKey(q)) {
+			if (quizz.get(q).equals(ans)) {
+				System.out.println("Chúc mừng bạn đã chọn đáp án chính xác!!!");
+			} else {
+				System.out.println("Bạn đã chọn đáp án sai. Chúc may mắn lần sau!!!");
+			}
+		} else if (quizz.containsKey(qU)) {
+			if (quizz.get(qU).equals(ans)) {
+				System.out.println("Chúc mừng bạn đã chọn đáp án chính xác!!!");
+			} else {
+				System.out.println("Bạn đã chọn đáp án sai. Chúc may mắn lần sau!!!");
+			}
+		} else {
+			System.out.println("Bạn đã chọn đáp án sai. Chúc may mắn lần sau!!!");
+		}
+                System.out.print("Bạn có muốn tiếp tục chơi(y/n):");
+                Confirm = sc.next();
+                }
+	}
+
+	public static void DefinitionQuizz() {
+		Random generator = new Random();
+                
+                String Confirm = "y";
+                while(Confirm.equals("y") || Confirm.equals("Y")){
+		int value = generator.nextInt(slangdictionary.size()) + 1;
+
+		Object firstKey = slangdictionary.keySet().toArray()[value];
+		Object valueForFirstKey = slangdictionary.get(firstKey);
+
+		String ans = firstKey.toString();
+
+		List<String> definitions = new ArrayList<>();
+		definitions.add(ans);
+
+		System.out.println("-------------------");
+		System.out.println("definition: " + valueForFirstKey);
+		System.out.println("Choose the right slangword");
+
+		for (int i = 0; i < 3; i++) {
+
+			value = generator.nextInt(slangdictionary.size()) + 1;
+			Object firstKey2 = slangdictionary.keySet().toArray()[value];
+			Object valueForFirstKey2 = slangdictionary.get(firstKey2);
+
+			definitions.add(firstKey2.toString());
+		}
+
+		Collections.shuffle(definitions);
+
+		HashMap<String, String> quizz = new HashMap<String, String>();
+		quizz.put("A", definitions.get(0));
+		quizz.put("B", definitions.get(1));
+		quizz.put("C", definitions.get(2));
+		quizz.put("D", definitions.get(3));
+
+		for (Entry<String, String> entry : quizz.entrySet()) {
+			System.out.println(entry.getKey() + ". " + entry.getValue());
+		}
+
+		System.out.print("Input answer: ");
+		String q = sc.next();
+		String qU = q.toUpperCase();
+
+		if (quizz.containsKey(q)) {
+			if (quizz.get(q).equals(ans)) {
+				System.out.println("Chúc mừng bạn đã chọn đáp án chính xác!!!");
+			} else {
+				System.out.println("Bạn đã chọn đáp án sai. Chúc may mắn lần sau!!!");
+			}
+		} else if (quizz.containsKey(qU)) {
+			if (quizz.get(qU).equals(ans)) {
+				System.out.println("Chúc mừng bạn đã chọn đáp án chính xác!!!");
+			} else {
+				System.out.println("Bạn đã chọn đáp án sai. Chúc may mắn lần sau!!!");
+			}
+		} else {
+			System.out.println("Bạn đã chọn đáp án sai. Chúc may mắn lần sau!!!");
+		}
+                System.out.print("Bạn có muốn tiếp tục chơi(y/n):");
+                Confirm = sc.next();
+                }
+        }
 
 }
