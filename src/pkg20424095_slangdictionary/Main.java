@@ -6,10 +6,9 @@
 package pkg20424095_slangdictionary;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Scanner;
+
 
 /**
  *
@@ -63,16 +62,18 @@ public class Main {
             DeleteSlangWord();
             continue;
         case 7:
-            System.out.println("Coming soon!!!");
+            ResetSlangWord();
             continue;
         case 8:
             RandomSlangWord();
             continue;
         case 9:
-            System.out.println("Coming soon!!!");
+            SlangWord();
+            SlangWordQuizz();
             continue;
         case 10:
-            System.out.println("Coming soon!!!");
+            SlangWord();
+            DefinitionQuizz();
             continue;
         default:
             break;
@@ -101,7 +102,6 @@ public class Main {
         catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(slangdictionary.size());
     }
     
     public static void SearchSlangWord() throws IOException{
@@ -354,18 +354,60 @@ public class Main {
         }
     }
     
+    public static void ResetSlangWord() {
+		slangdictionary = new HashMap<String, String>();
+                File oldFile = new File(filePath);
+                File newFile = new File("temp.txt");
+		String thisLine = null;
+                String currentLine;
+                String data[];
+
+		try {
+			// open input stream test.txt for reading purpose.
+			BufferedReader br = new BufferedReader(new FileReader("rootslang.txt"));
+                        
+                        FileWriter fw = new FileWriter("temp.txt",true);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        PrintWriter pw = new PrintWriter(bw);
+                        
+                        while ((currentLine = br.readLine())!= null) {
+                    
+                    
+                        data = currentLine.split("`");
+                        
+                            pw.println(currentLine);
+                        
+                    }
+
+			
+                        pw.close();
+			br.close();
+                        oldFile.delete();
+                        File dump = new File(filePath);
+                        newFile.renameTo(dump);
+			System.out.println("Thư Viên Slang word đã được reset");
+			// System.out.println(dictionary);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+    
     public static void RandomSlangWord()throws IOException {
         System.out.println("-------------Random Slang Word---------------");
         String data[];
         File file = new File(filePath); 
-        final RandomAccessFile f = new RandomAccessFile(file, "r");
-        final long randomLocation = (long) (Math.random() * f.length());
-        f.seek(randomLocation);
-        f.readLine();
-        String randomLine = f.readLine();
-        f.close();
+        final RandomAccessFile raf = new RandomAccessFile(file, "r");
+        final long randomLocation = (long) (Math.random() * raf.length());
+        raf.seek(randomLocation);
+        raf.readLine();
+        String randomLine = raf.readLine();
+        raf.close();
         
         data = randomLine.split("`");
         System.out.println("Slang word: " + data[0] + ", Definition: " + data[1]);
     }
+    
+    
+
 }
